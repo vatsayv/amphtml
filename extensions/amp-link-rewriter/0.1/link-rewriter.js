@@ -15,9 +15,10 @@
  */
 
 import {Services} from '../../../src/services';
-import {getConfigOpts} from './config-options';
 import {getDataParamsFromAttributes} from '../../../src/dom';
 import {getScopeElements} from './scope';
+import { getConfigOpts } from './config-options';
+import { isAmznlink } from './scope';
 
 const WL_ANCHOR_ATTR = ['href', 'id', 'rel', 'rev'];
 const PREFIX_DATA_ATTR = /^vars(.+)/;
@@ -37,7 +38,7 @@ export class LinkRewriter {
     /** @private {!../../../src/service/ampdoc-impl.AmpDoc} */
     this.ampDoc_ = ampDoc;
 
-    /** @private {?Object} */
+    /** @private {?Object}*/
     this.configOpts_ = getConfigOpts(ampElement);
 
     /** @private {Array<!Element>} */
@@ -51,6 +52,7 @@ export class LinkRewriter {
 
     /** @private {!../../../src/service/url-replacements-impl.UrlReplacements} */
     this.urlReplacementService_ = Services.urlReplacementsForDoc(ampElement);
+
   }
 
   /**
@@ -116,11 +118,27 @@ export class LinkRewriter {
       return element === anchor;
     });
 
-    if (filtered.length > 0) {
+
+
+    if (filtered.length > 0)
+    {
       return true;
     }
 
     return false;
+  }
+
+  // adds links added dynamically 
+  // to  listElements_ 
+  /**
+  * @param {!Element} element
+  */
+  updateList(element)
+  {
+    if(isAmznlink(element))
+    {
+      this.listElements_.push(element);
+    }
   }
 
   /**

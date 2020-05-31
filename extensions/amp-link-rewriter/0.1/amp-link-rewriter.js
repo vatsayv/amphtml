@@ -18,6 +18,11 @@ import {Layout} from '../../../src/layout';
 import {LinkRewriter} from './link-rewriter';
 import {Priority} from '../../../src/service/navigation';
 import {Services} from '../../../src/services';
+import {hasOwn} from '../../../src/utils/object';
+import {CommonSignals} from '../../../src/common-signals';
+import {Tracking} from './tracking';
+import {amznTransitRecorder} from './dynamic-handler';
+import {dynamicLinkHandler} from './dynamic-handler';
 
 export class AmpLinkRewriter extends AMP.BaseElement {
   /** @param {!AmpElement} element */
@@ -29,11 +34,28 @@ export class AmpLinkRewriter extends AMP.BaseElement {
 
     /** @private {string} */
     this.referrer_ = '';
+    
+    /**@private {Object} */
+    this.configOpts_ = null;
+
+    /** @private {?../../../src/service/ampdoc-impl.AmpDoc} */
+    this.ampDoc_ = null;
+
+    /** @private {?./tracking.Tracking} */
+    this.tracking = null;
+
+    /** @private {string} */
+    this.transitId = '';
+
   }
+
+   
 
   /** @override */
   buildCallback() {
-    const viewer = Services.viewerForDoc(this.getAmpDoc());
+    this.ampDoc_ = this.getAmpDoc();
+
+    const viewer = Services.viewerForDoc(this.ampDoc_);
 
     /**
      * We had to get referrerUrl here because when we use expandUrlSync()
@@ -55,8 +77,12 @@ export class AmpLinkRewriter extends AMP.BaseElement {
       this.element,
       this.getAmpDoc()
     );
-
+    this.configOpts_ = this.rewriter_.configOpts_;
+    this.listElements_ = this.rewriter_.listElements_;
+    if(hasOwn(this.configOpts_,'linkers') && this.configOpts_['linkers']['enabled'] === true)
+    this.transitId = amznTransitRecorder(this.configOpts_);
     this.attachClickEvent_();
+    this.analyticsCall_();
   }
 
   /**
@@ -72,6 +98,29 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     return true;
   }
 
+  // setups analytics for firing
+  // pixel calls 
+  analyticsCall_()
+  {
+    if(hasOwn(this.configOpts_,"reportlinks"))
+    {
+      this.ampDoc_.waitForBodyOpen().then(() => {
+        this.signals().signal(CommonSignals.LOAD_START);
+        this.tracking = new Tracking(this.referrer_,this.configOpts_,this.element,this.listElements_,this.ampDoc_,this.transitId);
+        this.tracking.setUpAnalytics().then(() =>
+        {
+          this.tracking.sendPageImpression();
+          this.tracking.sendLinkImpression();
+          dynamicLinkHandler(this.tracking,this.ampDoc_,this.configOpts_,this.rewriter_);
+        });
+      });
+    }
+    else
+    {
+      dynamicLinkHandler(this.tracking,this.ampDoc_,this.configOpts_,this.rewriter_);
+    }
+  }
+
   /** @override */
   isLayoutSupported(layout) {
     return layout === Layout.NODISPLAY;
@@ -80,4 +129,5 @@ export class AmpLinkRewriter extends AMP.BaseElement {
 
 AMP.extension('amp-link-rewriter', '0.1', (AMP) => {
   AMP.registerElement('amp-link-rewriter', AmpLinkRewriter);
+  AMP.registerElement('amp-amazon-onetag',AmpLinkRewriter);
 });
