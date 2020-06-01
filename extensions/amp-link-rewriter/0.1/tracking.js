@@ -42,10 +42,8 @@ export class Tracking{
         this.slotNum = -1;
     }
 
+    // setups Analyitcs to make pixel calls
     /**
-     * 
-     * @param {!AmpElement} element
-     * @return {Promise}
      * @private 
      */
     setUpAnalytics()

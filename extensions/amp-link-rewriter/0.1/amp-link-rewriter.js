@@ -117,6 +117,8 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     }
     else
     {
+      // in this case dynamicLinkHandler only re-writes the dynamic
+      // links which are added and match the Amazon Regex
       dynamicLinkHandler(this.tracking,this.ampDoc_,this.configOpts_,this.rewriter_);
     }
   }
