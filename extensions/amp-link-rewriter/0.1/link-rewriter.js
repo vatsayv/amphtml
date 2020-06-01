@@ -133,7 +133,7 @@ export class LinkRewriter {
   /**
   * @param {!Element} element
   */
-  updateList(element)
+  updateList_(element)
   {
     if(isAmznlink(element))
     {

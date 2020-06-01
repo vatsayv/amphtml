@@ -109,7 +109,7 @@ export function dynamicLinkHandler(tracking,ampDoc,configOpts,rewriter)
             {
               tracking_.fireCalls(node);
             }
-            rewriter_.updateList(node);
+            rewriter_.updateList_(node);
           }
         }
       }

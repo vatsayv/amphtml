@@ -1,6 +1,5 @@
 import {CustomEventReporterBuilder} from '../../../src/extension-analytics.js';
 import {dict} from '../../../src/utils/object';
-import {isAmznlink} from './scope';
 
 
 /** 

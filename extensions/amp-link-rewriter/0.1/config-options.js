@@ -73,6 +73,7 @@ export function getConfigOpts(element) {
         const scripts = childElementsByTag(element, 'script'); 
         const remoteConfig = JSON.parse(scripts[0].innerHTML);  
         const aesConfig = JSON.parse(text);
+        // concatenates remoteconfig below localConfig in html 
         const finalConfig = Object.assign(remoteConfig,aesConfig);
         scripts[0].innerHTML = JSON.stringify(finalConfig);
         configOpts ={
