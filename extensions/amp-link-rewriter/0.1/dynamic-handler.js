@@ -23,7 +23,7 @@ export function amznTransitRecorder(configOpts)
     configObject['vars']['impressionToken'] +
     '-' +
     configObject['vars']['impressionId'];
-  if (trackingEnabled === false) {
+  if (trackingEnabled === false){
     return that;
   }
   if (trackingEnabled === true && !getTransitId()) {
