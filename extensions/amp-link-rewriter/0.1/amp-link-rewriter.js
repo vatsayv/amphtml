@@ -79,9 +79,10 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     );
     this.configOpts_ = this.rewriter_.configOpts_;
     this.listElements_ = this.rewriter_.listElements_;
-    if(hasOwn(this.configOpts_['linkers'],"enabled") && this.configOpts_['linkers']['enabled'] === true)
+    if(hasOwn(this.configOpts_,'linkers'))
     this.transitId = amznTransitRecorder(this.configOpts_);
     this.attachClickEvent_();
+    if(hasOwn(this.configOpts_,"reportlinks"))
     this.analyticsCall_();
   }
 
