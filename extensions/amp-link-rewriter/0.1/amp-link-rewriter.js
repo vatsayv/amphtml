@@ -79,7 +79,7 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     );
     this.configOpts_ = this.rewriter_.configOpts_;
     this.listElements_ = this.rewriter_.listElements_;
-    if(hasOwn(this.configOpts_,'linkers') && this.configOpts_['linkers']['enabled'] === true)
+    if(hasOwn(this.configOpts_['linkers'],"enabled") && this.configOpts_['linkers']['enabled'] === true)
     this.transitId = amznTransitRecorder(this.configOpts_);
     this.attachClickEvent_();
     this.analyticsCall_();
@@ -102,7 +102,7 @@ export class AmpLinkRewriter extends AMP.BaseElement {
   // pixel calls 
   analyticsCall_()
   {
-    if(hasOwn(this.configOpts_,"reportlinks"))
+    if(hasOwn(this.configOpts_["reportlinks"],"url"))
     {
       this.ampDoc_.waitForBodyOpen().then(() => {
         this.signals().signal(CommonSignals.LOAD_START);

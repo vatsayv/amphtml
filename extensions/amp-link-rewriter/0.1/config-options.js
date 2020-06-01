@@ -50,24 +50,24 @@ export function getConfigOpts(element) {
               '"tagValue": "abc-20"'+
             '},'+
             '"reportlinks": {'+
-              '"url": "https://assoc-na.associates-amazon.com/onetag/${impressionId}/pixel?assoc_payload=${assoc_payload}",'+
-              '"pageload": {'+
-                '"trackingId": "apartmentth0a20",'+
-                '"logType": "Onetag_pageload",'+
-                '"linkCode": "w49"'+
-              '},'+
-              '"linkload": {'+
-                '"trackingId": "apartmentth0a20",'+
-                '"logType": "Onetag_textlink",'+
-                '"linkCode": "w50"'+
-              '},'+
-              '"slotNum": true,'+ 
-              '"referrer": true,'+
-              '"pageTitle": true'+
-            '}, '+
-            '"linkers": {'+ 
-              '"enabled": true'+ 
-            '}'+
+            '"url": "https://assoc-na.associates-amazon.com/onetag/${impressionId}/pixel?assoc_payload=${assoc_payload}",'+
+            '"pageload": {'+
+              '"trackingId": "apartmentth0a20",'+
+              '"logType": "Onetag_pageload",'+
+              '"linkCode": "w49"'+
+            '},'+
+            '"linkload": {'+
+              '"trackingId": "apartmentth0a20",'+
+              '"logType": "Onetag_textlink",'+
+              '"linkCode": "w50"'+
+            '},'+
+            '"slotNum": true,'+ 
+            '"referrer": true,'+
+            '"pageTitle": true'+
+          '}, '+
+          '"linkers": {'+ 
+            '"enabled": true'+ 
+          '}'+            
           '}'+
           '}';
         const scripts = childElementsByTag(element, 'script'); 

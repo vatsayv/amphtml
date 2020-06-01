@@ -1,4 +1,5 @@
 import {hasOwn} from '../../../src/utils/object';
+import {isAmznlink} from './scope';
 
 
 /** 
@@ -61,7 +62,7 @@ export function dynamicLinkHandler(tracking,ampDoc,configOpts,rewriter)
   let currentTime = Date.now();
   let lastRunTime = Date.now();
   let updateBetweenTimeStep = false;
-  const timeStep = 3000;
+  const timeStep = 30000;
   const config = {
     childList: true,
     subTree: true,
@@ -104,7 +105,7 @@ export function dynamicLinkHandler(tracking,ampDoc,configOpts,rewriter)
       for (const node of mutation.addedNodes) {
         if (node.nodeType === 1 && node.tagName === 'A') {
           {
-            if(hasOwn(configOpts_,"reportlinks"))
+            if(hasOwn(configOpts_["reportlinks"],"url") && isAmznlink(node))
             {
               tracking_.fireCalls(node);
             }

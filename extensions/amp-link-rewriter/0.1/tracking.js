@@ -2,6 +2,7 @@ import {CustomEventReporterBuilder} from '../../../src/extension-analytics.js';
 import {dict} from '../../../src/utils/object';
 import {isAmznlink} from './scope';
 
+
 /** 
 *@typedef {{output: string, attribute: Object, vars: Object, reportLinks: Object, linkers: Object }}
 */
@@ -129,29 +130,26 @@ export class Tracking{
      */
     fireCalls(element)
     {
-      if(isAmznlink(element))
+      let linkImpression = dict(this.configOpts_['reportlinks']['linkload']);
+      if(this.configOpts_['reportlinks']['referrer'] === true)
+      linkImpression['refUrl'] = this.referrer_;
+      if(this.configOpts_['linkers']['enabled'] === true)
+      linkImpression['assocPayloadId'] = this.transitId_;
+      else
+      linkImpression['assocPayloadId'] = this.configOpts_['vars']['impressionToken']+ '-' + this.configOpts_['vars']['impressionId'];
+      if(this.configOpts_['reportlinks']['pageTitle'] === true)
+      linkImpression['pageTitle'] = this.ampDoc_.getRootNode().title; 
+      linkImpression['destinationUrl'] = element.href;
+      if(this.configOpts_['reportlinks']['slotNum'] === true)
       {
-        let linkImpression = dict(this.configOpts_['reportlinks']['linkload']);
-        if(this.configOpts_['reportlinks']['referrer'] === true)
-        linkImpression['refUrl'] = this.referrer_;
-        if(this.configOpts_['linkers']['enabled'] === true)
-        linkImpression['assocPayloadId'] = this.transitId_;
-        else
-        linkImpression['assocPayloadId'] = this.configOpts_['vars']['impressionToken']+ '-' + this.configOpts_['vars']['impressionId'];
-        if(this.configOpts_['reportlinks']['pageTitle'] === true)
-        linkImpression['pageTitle'] = this.ampDoc_.getRootNode().title; 
-        linkImpression['destinationUrl'] = element.href;
-        if(this.configOpts_['reportlinks']['slotNum'] === true)
-        {
-          element.setAttribute('data-slot-num',this.slotNum);
-          linkImpression['slotNum'] = this.slotNum;
-          this.slotNum = this.slotNum + 1;
-        } 
-        this.analytics_.trigger('link-tracker',dict({
-          'impressionId': this.configOpts_['vars']['impressionId'],
-          'assoc_payload': JSON.stringify(linkImpression),
-        }));
-      }
+        element.setAttribute('data-slot-num',this.slotNum);
+        linkImpression['slotNum'] = this.slotNum;
+        this.slotNum = this.slotNum + 1;
+      } 
+      this.analytics_.trigger('link-tracker',dict({
+        'impressionId': this.configOpts_['vars']['impressionId'],
+        'assoc_payload': JSON.stringify(linkImpression),
+      }));
     }
 
 }
