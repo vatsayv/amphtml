@@ -56,8 +56,7 @@ let unprocessedList;
  * @param {!./tracking.Tracking} tracking
  * @param {!../../../src/service/ampdoc-impl.AmpDoc} ampDoc
  * @param {!oneTagOptsDef} configOpts
- * @param rewriter
- * @param {!./link-rewriter.LinkRewriter}
+ * @param {!./link-rewriter.LinkRewriter} rewriter
  */
 export function dynamicLinkHandler(tracking, ampDoc, configOpts, rewriter) {
   properties = {

@@ -1,7 +1,6 @@
 import {CustomEventReporterBuilder} from '../../../src/extension-analytics.js';
 import {dict} from '../../../src/utils/object';
 
-
 /** 
 *@typedef {{output: string, attribute: Object, vars: Object, reportLinks: Object, linkers: Object }}
 */
@@ -27,6 +26,7 @@ export class Tracking{
         /** @private {Array<!Element>} */
         this.listElements_ = listElements;
 
+        /** @private {!AmpElement}*/
         this.ampElement_ = ampElement;
 
         /** @private {!Object} */

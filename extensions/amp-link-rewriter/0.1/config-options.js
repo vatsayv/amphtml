@@ -23,6 +23,7 @@ import {user, userAssert} from '../../../src/log';
  */
 let ConfigOptsDef;
 
+// oneTagOpts object definition
 /** 
 *@typedef {{output: string, attribute: Object, vars: Object, reportLinks: Object, linkers: Object }}
 */
