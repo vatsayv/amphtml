@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'regenerator-runtime/runtime'
 import {Layout} from '../../../src/layout';
 import {LinkRewriter} from './link-rewriter';
 import {Priority} from '../../../src/service/navigation';
@@ -23,11 +24,16 @@ import {CommonSignals} from '../../../src/common-signals';
 import {Tracking} from './tracking';
 import {amznTransitRecorder} from './dynamic-handler';
 import {dynamicLinkHandler} from './dynamic-handler';
+import {getChildJsonConfig} from '../../../src/json';
+import {getConfigOpts } from './config-options';
+import {oneTagConfig} from './config-options';
 
 export class AmpLinkRewriter extends AMP.BaseElement {
   /** @param {!AmpElement} element */
   constructor(element) {
     super(element);
+
+    this.element_ = element;
 
     /** @private {?./link-rewriter.LinkRewriter} */
     this.rewriter_ = null;
@@ -47,6 +53,14 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     /** @private {string} */
     this.transitId = '';
 
+    /** @private {object} */
+    this.config = null;
+
+    /** @private {Array<!Element>} */
+    this.listElements_ = null;
+
+    /** @private {object} */
+    this.remoteConfig = null;
   }
 
    
@@ -56,6 +70,21 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     this.ampDoc_ = this.getAmpDoc();
 
     const viewer = Services.viewerForDoc(this.ampDoc_);
+
+    this.config = getChildJsonConfig(this.element_);
+    
+    
+    if(hasOwn(this.config,'remoteConfig'))
+    {
+      return this.getAmpDoc()
+      .whenReady()
+      .then(() => viewer.getReferrerUrl())
+      .then((referrer) => (this.referrer_ = referrer))
+      .then(() => fetch('https://cgungobkk2.execute-api.us-east-1.amazonaws.com/live/confignumber'))
+      .then((response) => (response.json()))
+      .then((data) => (this.remoteConfig = data))
+      .then(this.amazonOneTag_.bind(this));
+    }
 
     /**
      * We had to get referrerUrl here because when we use expandUrlSync()
@@ -77,13 +106,30 @@ export class AmpLinkRewriter extends AMP.BaseElement {
       this.element,
       this.getAmpDoc()
     );
-    this.configOpts_ = this.rewriter_.configOpts_;
+    this.configOpts_ = getConfigOpts(this.element_);
+    this.rewriter_.configOpts_ = this.configOpts_;
+    this.rewriter_.setListElements();
+    this.attachClickEvent_();
+  }
+
+
+  amazonOneTag_()
+  {
+    this.rewriter_ = new LinkRewriter(
+      this.referrer_,
+      this.element,
+      this.getAmpDoc()
+    );
+    this.configOpts_ = oneTagConfig(this.element_,this.remoteConfig);
+    this.rewriter_.configOpts_ = this.configOpts_;
+    this.rewriter_.setListElements();
     this.listElements_ = this.rewriter_.listElements_;
     if(hasOwn(this.configOpts_,'linkers'))
     this.transitId = amznTransitRecorder(this.configOpts_);
     this.attachClickEvent_();
     if(hasOwn(this.configOpts_,"reportlinks"))
     this.analyticsCall_();
+
   }
 
   /**

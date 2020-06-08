@@ -39,11 +39,15 @@ export class LinkRewriter {
     this.ampDoc_ = ampDoc;
 
     /** @private {?Object}*/
-    this.configOpts_ = getConfigOpts(ampElement);
+    this.configOpts_ = null;
+
+    // this.configOpts_ = getConfigOpts(ampElement);
 
     /** @private {Array<!Element>} */
-    this.listElements_ = getScopeElements(this.ampDoc_, this.configOpts_);
+    this.listElements_ = null;
 
+    // this.listElements_ = getScopeElements(this.ampDoc_, this.configOpts_);
+    
     /** @private {string} */
     this.referrer_ = referrer;
 
@@ -139,6 +143,11 @@ export class LinkRewriter {
     {
       this.listElements_.push(element);
     }
+  }
+
+  setListElements()
+  {
+    this.listElements_ = getScopeElements(this.ampDoc_, this.configOpts_);
   }
 
   /**
