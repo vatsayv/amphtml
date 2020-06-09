@@ -76,11 +76,13 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     
     if(hasOwn(this.config,'remoteConfig'))
     {
+      console.log(this.config);
+      const urls = this.config['remoteConfig']['urls'];
       return this.getAmpDoc()
       .whenReady()
       .then(() => viewer.getReferrerUrl())
       .then((referrer) => (this.referrer_ = referrer))
-      .then(() => fetch('https://cgungobkk2.execute-api.us-east-1.amazonaws.com/live/confignumber'))
+      .then(() => fetch(urls[0]))
       .then((response) => (response.json()))
       .then((data) => (this.remoteConfig = data))
       .then(this.amazonOneTag_.bind(this));
