@@ -76,7 +76,6 @@ export class AmpLinkRewriter extends AMP.BaseElement {
     
     if(hasOwn(this.config,'remoteConfig'))
     {
-      console.log(this.config);
       const urls = this.config['remoteConfig']['urls'];
       return this.getAmpDoc()
       .whenReady()

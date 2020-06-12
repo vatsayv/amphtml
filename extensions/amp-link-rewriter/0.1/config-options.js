@@ -23,13 +23,13 @@ import {user, userAssert} from '../../../src/log';
  */
 let ConfigOptsDef;
 
-// oneTagOpts object definition
-/** 
-*@typedef {{output: string, attribute: Object, vars: Object, reportLinks: Object, linkers: Object }}
-*/
-let oneTagOptsDef;
 
-
+/**
+ * 
+ * @param {!AmpElement} element 
+ * @param {!Object} data
+ * @return {!Object} 
+ */
 export function oneTagConfig(element,data)
 {
   const scripts = childElementsByTag(element, 'script'); 
@@ -108,4 +108,3 @@ function parseAttribute(attribute) {
 
   return newAttr;
 }
-
